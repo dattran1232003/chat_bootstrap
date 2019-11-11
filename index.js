@@ -19,6 +19,7 @@ app.set('view engine', 'ejs');
 app.set('views', './views');
 
 
+
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const conn = mysql.createConnection({
@@ -34,13 +35,14 @@ conn.connect( (err) => {
 	console.log('Success to connect to database');
 });
 
+
 /* -------------------------- */
 
 var userInfo = {};
 
 // Routes
 //require('./app/routes.js')(app, passport, userInfo);
-require('./app/routes/auth.js')(app, passport);
+require('./app/routes/auth.js')(app, passport, conn);
 require('./app/routes/page.js')(app, userInfo);
 
 passport.use(new localStrategy (
