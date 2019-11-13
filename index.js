@@ -80,6 +80,12 @@ passport.deserializeUser( (name, done) => {
 	})
 });
 
+// Socket.io
+io.on('connection', (socket) => {
+	console.log(socket.id, 'is connected!');
+	socket.on('disconnect', () => console.log(socket.id, 'is disconnected!'));
+})
+
 // Server listen
 const port = process.env.PORT || 3000;
 server.listen(port, () => console.log('Server is running at port', port));
