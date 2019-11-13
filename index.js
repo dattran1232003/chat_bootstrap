@@ -5,16 +5,15 @@ const bodyParser 	= require('body-parser');
 const session 		= require('express-session');
 const localStrategy	= require('passport-local').Strategy;
 
-
 const app = express();
 // Application Use
 app.use(express.static('public'));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extend: true }));
-app.use(session({ secret: 'mysecret', resave: false, saveUnitialized: true, cookie: { maxAge: 1000*60*5 } }));
+app.use(session({ secret: 'mysecret', resave: false, saveUnitialized: true, cookie: { maxAge: 1000*10 } }));
 app.use(passport.initialize());
 app.use(passport.session());
-// Application Set
+// Application Set 
 app.set('view engine', 'ejs');
 app.set('views', './views');
 
@@ -45,6 +44,7 @@ var userInfo = {};
 require('./app/routes/auth.js')(app, passport, conn);
 require('./app/routes/page.js')(app, userInfo);
 
+// Authenticate
 passport.use(new localStrategy (
 	(username, password, done) => {
 		const sql = `SELECT * FROM users WHERE usrName='${username}';`;

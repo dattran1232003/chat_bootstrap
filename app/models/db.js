@@ -14,13 +14,14 @@ conn.connect(err => {
 });
 
 // Select
-const Select = (columns, tables, where=1) => {
-	const sql = `SELECT ${columns} FROM ${tables} WHERE ${where}`;
+const Select = (obj, cb) => {
+	if (typeof obj !== 'object') return cb('first parameter is an object');
+
+	const sql = `SELECT ${obj.columns} FROM ${obj.tables} WHERE ${obj.where}`;
 	console.log(sql);
 	conn.query(sql, (err, results, fields) => {
 		if (err) throw err;
-		console.log(results);
-		return results;
+		return cb(err, results, fields);
 	});
 }
 
@@ -34,29 +35,34 @@ const Delete = (tables, where=1) => {
 	});
 }
 
-// Insert
-const Insert = (columns, tables, values) => {
-	if (columns.length != values.length) {
-		console.log('The number of lines must equal the number of values');
+// Insert obj{tables, columns, values}
+const Insert = (obj, cb) => {
+	if (typeof obj !== 'object') return cb('first parameter is an object');
+	
+	if (obj.columns.length != obj.values.length) {
+		console.log('The number of columns must equal the number of values');
 		return;
 	}
-	// add "'" for string
-	values.forEach((val, i) => {
+	// add "'" to string
+	obj.values.forEach((val, i) => {
 		if (typeof val === 'string') {
 			val = "'" + val + "'";
-			values[i] = val;
+			obj.values[i] = val;
 		}
 	});
-	const sql = `INSERT INTO ${tables}(${columns}) VALUES(${values});`;
+	const sql = `INSERT INTO ${obj.tables}(${obj.columns}) VALUES(${obj.values});`;
 	conn.query(sql, (err, results, fields) => {
-		if (err) throw err;
-		console.log(results);
-		return results;
+		return cb(err, results, fields);
 	});
 }
 
+/*
 columns = ['usrName', 'usrPwd', 'dplName'];
 tables = ['users'];
 values = ['darkworld', 123456, 'dArkWorlD'];
 // Insert(columns, tables, values);
-Delete(`users`, `usrName='darkworld'`);
+Delete(`users`, `usrName='darkworld'`);*/
+
+module.exports.Select = Select;
+module.exports.Insert = Insert;
+module.exports.Delete = Delete;

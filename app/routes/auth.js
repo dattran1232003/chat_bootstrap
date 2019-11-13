@@ -1,4 +1,5 @@
 module.exports = (app, passport, conn) => {
+	const db = require('../models/db.js');
 	app.route('/login')
 		.get( (req, res) => res.render('login'))
 		.post(passport.authenticate('local', { failureRedirect: '/login', successRedirect: '/' }))
@@ -10,10 +11,25 @@ module.exports = (app, passport, conn) => {
 		.post( (req, res) => {
 			const user = req.body;
 			console.log(user);
-			conn.query(`SELECT usrName from users where usrName='${user.username};'`, (err, results, field) => {
-				
-			})
-			const sql = `INSERT INTO users(usrName, usrPwd, dplName) VALUES ('${user.username}', '${user.password}', '${user.CustomName}');`;
-			conn.query(sql, (err) => {if (err) throw err});
+			const SelectInfo = {
+				tables: 'users',
+				columns: '*',
+				where: `usrName='${user.username}'`
+			};
+			db.Select(SelectInfo, (err, results, fields) => {
+				if (results.length === 1){
+					res.redirect('/signup');
+					return;
+				} else {
+					const InsertInfo = {
+						tables: 'users',
+						columns: ['usrName', 'usrPwd', 'dplName'],
+						values: [user.username, user.password, user.CustomName]
+					};
+					db.Insert(InsertInfo, (err) => {if (err) throw err});
+				}
+			});
+
 		})
+
 }
