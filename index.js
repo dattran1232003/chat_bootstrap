@@ -10,7 +10,7 @@ const app = express();
 app.use(express.static('public'));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extend: true }));
-app.use(session({ secret: 'mysecret', resave: false, saveUnitialized: true, cookie: { maxAge: 1000*10 } }));
+app.use(session({ secret: 'mysecret', resave: false, saveUnitialized: true, cookie: { maxAge: 1000*60*5 } }));
 app.use(passport.initialize());
 app.use(passport.session());
 // Application Set 
@@ -53,12 +53,11 @@ passport.use(new localStrategy (
 			let userRecord = {};
 			if (results.length >= 1) {
 				userRecord = results[0];
-				if (userRecord.usrPwd == password) {
+				if (userRecord.usrPwd === password) {
 					return done(null, userRecord);
 				}
-			} else {
-					return done(null, false);
 			}
+			return done(null, false);
 		})
 	}
 ));
@@ -76,9 +75,8 @@ passport.deserializeUser( (name, done) => {
 			userRecord = results[0];
 			userInfo.name = userRecord.dplName;
 			return done(null, userRecord);
-		} else {
-			return done(null, false);
 		}
+		return done(null, false);
 	})
 });
 

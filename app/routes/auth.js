@@ -1,7 +1,13 @@
 module.exports = (app, passport, conn) => {
 	const db = require('../models/db.js');
 	app.route('/login')
-		.get( (req, res) => res.render('login'))
+		.get( (req, res) => {
+			if (!req.isAuthenticated()){
+				res.render('login');
+			} else {
+				res.redirect('/');
+			}
+		})
 		.post(passport.authenticate('local', { failureRedirect: '/login', successRedirect: '/' }))
 
 	app.route('/signup')
