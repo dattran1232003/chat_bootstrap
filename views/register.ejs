@@ -4,34 +4,37 @@
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css" />
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="css/login.css" />
+    <link rel="stylesheet" href="css/register.css" />
 </head>
 <body>
-    <div class="wrapper fadeInDown">
-        <div id="formContent">
-        <!-- Tabs Titles -->
-
-            <!-- Icon -->
-            <div class="fadeIn first">
-                <img src="https://icon-library.net/images/user-icon-image/user-icon-image-21.jpg" id="icon" alt="User Icon" style="width:50px; margin-top: 7px;" />
-            </div>
-
-            <!-- Login Form -->
-            <form method="post" action="/signup">
-                <input type="text" id="username" class="fadeIn second" name="username" placeholder="username" autocomplete="off" />
-                <input type="text" id="CustomName" class="fadeIn second" name="CustomName" placeholder="Customize name" autocomplete="off" />
-                <input type="password" id="password" class="fadeIn third" name="password" placeholder="Password" autocomplete="off" />
-                <input type="password" id="rePassword" class="fadeIn third" name="rePassword" placeholder="Confirm password" autocomplete="off" />
-                <input type="submit" class="fadeIn fourth" value="Sign Up">
-            </form>
-
-            <!-- Remind Passowrd -->
-            <div id="formFooter">
-            <a class="underlineHover" href="/login">Already have an account?</a>
-            </div>
-            
+    <!-- Login Form -->
+    <form method="post" action="/signup">
+        <h2>Sign Up</h2>
+        <p>
+            <label for="username" class="floatLabel">Username</label>
+            <input id="username" name="username" type="text">
+        </p>
+        <p>
+            <label for="password" class="floatLabel">Password</label>
+            <input id="password" name="password" type="password">
+            <span>Enter a password longer than 8 characters</span>
+        </p>
+        <p>
+            <label for="confirm_password" class="floatLabel">Confirm Password</label>
+            <input id="confirm_password" name="confirm_password" type="password">
+            <span>Your passwords do not match</span>
+        </p>
+        <p>
+            <button type="submit" id="submit">Create My Account</button>
+        </p>
+        <div id="formFooter">
+            <a class="underlineHover" href="/login">Login</a>
         </div>
-    </div>
+    </form>
+
+    
+
+    <script src="js/register.js"></script>
 </body>
 </html>
 

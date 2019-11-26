@@ -8,17 +8,17 @@ const session 		= require('express-session');
 const LocalStrategy	= require('passport-local').Strategy;
 
 const app = express();
-// Application Use
+// Application Setup
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extend: true }));
 app.use(session({ secret: 'mysecret', resave: false, saveUnitialized: true, cookie: { maxAge: 1000*60*5 } }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-// Application Set 
-app.use(express.static(path.join(__dirname, 'public')));
+// Application Template
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 
