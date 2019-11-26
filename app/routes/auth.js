@@ -1,41 +1,39 @@
-module.exports = (app, passport, conn) => {
-	const db = require('../models/db.js');
+module.exports = (app, passport) => {
+	const isAuthenticated = (req, res, next) => {
+		if (req.isAuthenticated())
+			return next();
+		res.redirect('/login');
+	}
+
+	app.get('/', isAuthenticated, (req, res) => {
+		user = req.user;
+		console.log(user);
+		res.render('mainPage', {user: user.dplName});
+	});
+
 	app.route('/login')
 		.get( (req, res) => {
-			if (!req.isAuthenticated()){
-				res.render('login');
-			} else {
-				res.redirect('/');
-			}
+			res.render('login', {message: req.flash('message')});
 		})
-		.post(passport.authenticate('local', { failureRedirect: '/login', successRedirect: '/' }))
+		.post(passport.authenticate('login', {
+			successRedirect: '/',
+			failureRedirect: '/login',
+			failureFlash: true
+		}));
 
 	app.route('/signup')
 		.get( (req, res) => {
-			res.render('signup');
+			res.render('register', {message: req.flash('message')});
 		})
-		.post( (req, res) => {
-			const user = req.body;
-			console.log(user);
-			const SelectInfo = {
-				tables: 'users',
-				columns: '*',
-				where: `usrName='${user.username}'`
-			};
-			db.Select(SelectInfo, (err, results, fields) => {
-				if (results.length === 1){
-					res.redirect('/signup');
-					return;
-				} else {
-					const InsertInfo = {
-						tables: 'users',
-						columns: ['usrName', 'usrPwd', 'dplName'],
-						values: [user.username, user.password, user.CustomName]
-					};
-					db.Insert(InsertInfo, (err) => {if (err) throw err});
-				}
-			});
+		.post(passport.authenticate('signup', {
+			successRedirect: '/',
+			failureRedirect: '/signup',
+			failureFlash: true
+		}));
 
-		})
+	app.get('/signout', (req, res) => {
+		req.logout();
+		res.redirect('/');
+	})
 
 }
